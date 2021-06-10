@@ -153,7 +153,7 @@ app.delete('/api/v1/users/:id', async (req, res) => {
   db.close();
 });
 
-// Get all users
+// Get following users
 app.get('/api/v1/users/:id/following', (req, res) => {
   // Connect database
   const db = new sqlite3.Database(dbPath);
