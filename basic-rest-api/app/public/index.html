@@ -11,10 +11,16 @@
   <body>
     <main>
       <h1>ユーザー管理</h1>
-      <label for="search">ユーザー名で検索</label>
-      <input type="text" id="search" />
+      <label for="search-name">ユーザー名で検索</label>
+      <input type="text" id="search-name" />
+
+      <label for="search-mail">メールアドレスで検索</label>
+      <input type="text" id="search-mail" />
       <button id="search-btn">検索</button>
+      <button type=“button” onclick="location.href='/'">キャンセル</button>
+
       <a href="create.html">新規作成</a>
+
       <table>
         <thead>
           <tr>

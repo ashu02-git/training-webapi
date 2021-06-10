@@ -47,11 +47,23 @@ app.get('/api/v1/users/:id', (req, res) => {
 app.get('/api/v1/search', (req, res) => {
   // Connect database
   const db = new sqlite3.Database(dbPath);
-  const keyword = req.query.q;
-
-  db.all(`SELECT * FROM users WHERE name LIKE "%${keyword}%"`, (err, rows) => {
-    res.json(rows);
-  });
+  if (req.query.name) {
+    const keyword = req.query.name;
+    db.all(
+      `SELECT * FROM users WHERE name LIKE "%${keyword}%"`,
+      (err, rows) => {
+        res.json(rows);
+      }
+    );
+  } else {
+    const keyword = req.query.mail;
+    db.all(
+      `SELECT * FROM users WHERE mail LIKE "%${keyword}%"`,
+      (err, rows) => {
+        res.json(rows);
+      }
+    );
+  }
 
   db.close();
 });
