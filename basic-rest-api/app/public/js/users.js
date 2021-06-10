@@ -45,7 +45,7 @@ const usersModule = (() => {
         const user = users[i];
         const body = `<tr>
                         <td>${user.id}</td>
-                        <td>${user.name}</td>               
+                        <td><a href='following.html?uid=${user.id}'>${user.name}</a></td>               
                         <td>${user.profile}</td>
                         <td>${user.date_of_birth}</td>
                         <td>${user.created_date}</td>
@@ -117,6 +117,26 @@ const usersModule = (() => {
         });
 
         return handleError(res);
+      }
+    },
+    fetchFollowingUsers: async (uid) => {
+      const res = await fetch(BASE_URL + '/' + uid + '/following');
+      const followingUsers = await res.json();
+     
+      for (let i in followingUsers) {
+        const followingUser = followingUsers[i];
+        const body = `<tr>
+                        <td>${followingUser.id}</td>
+                        <td><a href='following.html?uid=${followingUser.id}'>${followingUser.name}</a></td>               
+                        <td>${followingUser.profile}</td>
+                        <td>${followingUser.date_of_birth}</td>
+                        <td>${followingUser.created_date}</td>
+                        <td>${followingUser.updated_date}</td>
+                        <td><a href='edit.html?uid=${followingUser.id}'>編集</a></td>
+                      </tr>`;
+        document
+          .getElementById('users-list')
+          .insertAdjacentHTML('beforeend', body);
       }
     },
   };
