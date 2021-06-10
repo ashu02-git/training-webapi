@@ -21,7 +21,7 @@ const indexModule = (() => {
       break;
 
     case '/edit.html':
-      const uid = window.location.search.split('?uid=')[1]
+      const uid = window.location.search.split('?uid=')[1];
 
       document.getElementById('save-btn').addEventListener('click', () => {
         return usersModule.saveUser(uid);
@@ -33,7 +33,7 @@ const indexModule = (() => {
         return usersModule.deleteUser(uid);
       });
 
-      return usersModule.setExistingValue(uid)
+      return usersModule.setExistingValue(uid);
 
       break;
 
