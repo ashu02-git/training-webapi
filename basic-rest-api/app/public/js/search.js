@@ -4,9 +4,14 @@ const searchModule = (() => {
   return {
     searchUsers: async () => {
       // 検索窓への入力値を習得
-      const query = document.getElementById('search').value;
-
-      const res = await fetch(BASE_URL + '?q=' + query);
+      const valueName = document.getElementById('search-name').value;
+      const valueMail = document.getElementById('search-mail').value;
+      let res;
+      if (valueName.length > 0) {
+        res = await fetch(BASE_URL + '?name=' + valueName);
+      } else {
+        res = await fetch(BASE_URL + '?mail=' + valueMail);
+      }
       const result = await res.json();
 
       let body = '';
@@ -15,7 +20,8 @@ const searchModule = (() => {
         const user = result[i];
         body += `<tr>
                   <td>${user.id}</td>
-                  <td>${user.name}</td>               
+                  <td>${user.name}</td>
+                  <td>${user.mail}</td>
                   <td>${user.profile}</td>
                   <td>${user.date_of_birth}</td>
                   <td>${user.created_date}</td>

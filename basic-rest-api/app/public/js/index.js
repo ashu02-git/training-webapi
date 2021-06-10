@@ -22,7 +22,6 @@ const indexModule = (() => {
       break;
 
     case '/edit.html':
-      
       document.getElementById('save-btn').addEventListener('click', () => {
         return usersModule.saveUser(uid);
       });
