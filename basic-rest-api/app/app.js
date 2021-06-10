@@ -47,11 +47,23 @@ app.get('/api/v1/users/:id', (req, res) => {
 app.get('/api/v1/search', (req, res) => {
   // Connect database
   const db = new sqlite3.Database(dbPath);
-  const keyword = req.query.q;
-
-  db.all(`SELECT * FROM users WHERE name LIKE "%${keyword}%"`, (err, rows) => {
-    res.json(rows);
-  });
+  if (req.query.name) {
+    const keyword = req.query.name;
+    db.all(
+      `SELECT * FROM users WHERE name LIKE "%${keyword}%"`,
+      (err, rows) => {
+        res.json(rows);
+      }
+    );
+  } else {
+    const keyword = req.query.mail;
+    db.all(
+      `SELECT * FROM users WHERE mail LIKE "%${keyword}%"`,
+      (err, rows) => {
+        res.json(rows);
+      }
+    );
+  }
 
   db.close();
 });
@@ -77,12 +89,13 @@ app.post('/api/v1/users', async (req, res) => {
     const db = new sqlite3.Database(dbPath);
 
     const name = req.body.name;
+    const mail = req.body.mail ? req.body.mail : '';
     const profile = req.body.profile ? req.body.profile : '';
     const dateOfBirth = req.body.date_of_birth ? req.body.date_of_birth : '';
 
     try {
       await run(
-        `INSERT INTO users (name, profile, date_of_birth) VALUES ("${name}", "${profile}", "${dateOfBirth}")`,
+        `INSERT INTO users (name, mail, profile, date_of_birth) VALUES ("${name}","${mail}", "${profile}", "${dateOfBirth}")`,
         db
       );
       res.status(201).send({ message: '新規ユーザーを作成しました。' });
@@ -109,6 +122,7 @@ app.put('/api/v1/users/:id', async (req, res) => {
         res.status(404).send({ error: '指定されたユーザーが見つかりません。' });
       } else {
         const name = req.body.name ? req.body.name : row.name;
+        const mail = req.body.mail ? req.body.mail : row.mail;
         const profile = req.body.profile ? req.body.profile : row.profile;
         const dateOfBirth = req.body.date_of_birth
           ? req.body.date_of_birth
@@ -116,7 +130,7 @@ app.put('/api/v1/users/:id', async (req, res) => {
 
         try {
           await run(
-            `UPDATE users SET name="${name}", profile="${profile}", date_of_birth="${dateOfBirth}" WHERE id = ${id}`,
+            `UPDATE users SET name="${name}", mail="${mail}", profile="${profile}", date_of_birth="${dateOfBirth}", updated_date = CURRENT_TIMESTAMP WHERE id = ${id}`,
             db
           );
           res.status(200).send({ message: 'ユーザー情報を更新しました' });

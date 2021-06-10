@@ -45,7 +45,8 @@ const usersModule = (() => {
         const user = users[i];
         const body = `<tr>
                         <td>${user.id}</td>
-                        <td>${user.name}</td>               
+                        <td><a href='following.html?uid=${user.id}'>${user.name}</a></td>
+                        <td>${user.mail}</td>
                         <td>${user.profile}</td>
                         <td>${user.date_of_birth}</td>
                         <td>${user.created_date}</td>
@@ -59,12 +60,14 @@ const usersModule = (() => {
     },
     createUser: async () => {
       const name = document.getElementById('name').value;
+      const mail = document.getElementById('mail').value;
       const profile = document.getElementById('profile').value;
       const dateOfBirth = document.getElementById('date-of-birth').value;
 
       // リクエストのbody
       const body = {
         name: name,
+        mail: mail,
         profile: profile,
         date_of_birth: dateOfBirth,
       };
@@ -82,17 +85,20 @@ const usersModule = (() => {
       const resJson = await res.json();
 
       document.getElementById('name').value = resJson.name;
+      document.getElementById('mail').value = resJson.mail;
       document.getElementById('profile').value = resJson.profile;
       document.getElementById('date-of-birth').value = resJson.date_of_birth;
     },
     saveUser: async (uid) => {
       const name = document.getElementById('name').value;
+      const mail = document.getElementById('mail').value;
       const profile = document.getElementById('profile').value;
       const dateOfBirth = document.getElementById('date-of-birth').value;
 
       // リクエストのbody
       const body = {
         name: name,
+        mail: mail,
         profile: profile,
         date_of_birth: dateOfBirth,
       };
@@ -117,6 +123,27 @@ const usersModule = (() => {
         });
 
         return handleError(res);
+      }
+    },
+    fetchFollowingUsers: async (uid) => {
+      const res = await fetch(BASE_URL + '/' + uid + '/following');
+      const followingUsers = await res.json();
+
+      for (let i in followingUsers) {
+        const followingUser = followingUsers[i];
+        const body = `<tr>
+                        <td>${followingUser.id}</td>
+                        <td><a href='following.html?uid=${followingUser.id}'>${followingUser.name}</a></td>
+                        <td>${followingUser.mail}</td>
+                        <td>${followingUser.profile}</td>
+                        <td>${followingUser.date_of_birth}</td>
+                        <td>${followingUser.created_date}</td>
+                        <td>${followingUser.updated_date}</td>
+                        <td><a href='edit.html?uid=${followingUser.id}'>編集</a></td>
+                      </tr>`;
+        document
+          .getElementById('users-list')
+          .insertAdjacentHTML('beforeend', body);
       }
     },
   };
